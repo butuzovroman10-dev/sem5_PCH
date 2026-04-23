@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Семинар 5: Коллекции и итераторы в C++ | IT-Company</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1em;
+            opacity: 0.95;
+        }
+
+        .badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            padding: 5px 15px;
+            border-radius: 20px;
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .section {
+            margin-bottom: 40px;
+            background: #f8f9fa;
+            border-radius: 15px;
+            padding: 25px;
+            border-left: 5px solid #667eea;
+        }
+
+        .section h2 {
+            color: #667eea;
+            margin-bottom: 20px;
+            font-size: 1.8em;
+        }
+
+        .section h3 {
+            color: #764ba2;
+            margin: 15px 0 10px 0;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            color: #d4d4d4;
+            padding: 20px;
+            border-radius: 10px;
+            overflow-x: auto;
+            font-family: 'Courier New', monospace;
+            font-size: 14px;
+            margin: 15px 0;
+            line-height: 1.5;
+        }
+
+        .code-block .keyword { color: #569cd6; }
+        .code-block .type { color: #4ec9b0; }
+        .code-block .string { color: #ce9178; }
+        .code-block .comment { color: #6a9955; }
+        .code-block .function { color: #dcdcaa; }
+        .code-block .number { color: #b5cea8; }
+
+        .output {
+            background: #2d2d2d;
+            color: #f8f8f2;
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            margin: 15px 0;
+            white-space: pre-wrap;
+        }
+
+        .output-title {
+            background: #1a1a1a;
+            color: #ffd700;
+            padding: 8px 15px;
+            border-radius: 8px 8px 0 0;
+            font-weight: bold;
+            margin-bottom: 0;
+        }
+
+        .info-box {
+            background: #e3f2fd;
+            border-left: 4px solid #2196f3;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .warning-box {
+            background: #fff3e0;
+            border-left: 4px solid #ff9800;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .success-box {
+            background: #e8f5e9;
+            border-left: 4px solid #4caf50;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .card h4 {
+            color: #667eea;
+            margin-bottom: 10px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background: #667eea;
+            color: white;
+        }
+
+        tr:hover {
+            background: #f1f1f1;
+        }
+
+        .footer {
+            background: #333;
+            color: white;
+            text-align: center;
+            padding: 20px;
+            font-size: 0.9em;
+        }
+
+        .structure {
+            background: #2d2d2d;
+            color: #d4d4d4;
+            padding: 15px;
+            border-radius: 10px;
+            font-family: monospace;
+            margin: 15px 0;
+        }
+
+        @media (max-width: 768px) {
+            .grid-2 {
+                grid-template-columns: 1fr;
+            }
+            .code-block {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📦 Коллекции и Итераторы в C++</h1>
+        <p>Шаблонный класс MyContainer&lt;T&gt; | Внутренний итератор | std::find и std::sort</p>
+        <p>Предметная область: IT-компания (Developer, Manager, Tester)</p>
+        <div class="badge">Семинар 5 | C++17 | CMake</div>
+    </div>
+
+    <div class="content">
+        <!-- ============================================ -->
+        <!-- СТРУКТУРА ПРОЕКТА -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📁 Структура проекта</h2>
+            <div class="structure">
+                sem5_PCS/<br>
+                ├── IWorkable.h              # Абстрактный интерфейс<br>
+                ├── Employee.h               # Базовый абстрактный класс сотрудника<br>
+                ├── Developer.h              # Класс разработчика<br>
+                ├── Manager.h                # Класс менеджера<br>
+                ├── Tester.h                 # Класс тестировщика<br>
+                ├── MyContainer.h            # Шаблонный класс-коллекция с итератором<br>
+                ├── main.cpp                 # Демонстрация работы<br>
+                ├── CMakeLists.txt           # Файл сборки<br>
+                └── README.md                # Документация
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ЧТО ТАКОЕ КОЛЛЕКЦИЯ И ИТЕРАТОР -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📚 Что такое коллекция и итератор?</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>📦 Коллекция (контейнер)</h4>
+                    <p>Объект, который хранит группу других объектов и предоставляет методы для работы с ними: добавление, удаление, поиск, перебор.</p>
+                    <div class="code-block" style="margin-top: 10px;">
+                        <pre style="margin:0">MyContainer&lt;Employee*&gt; company;
+company.push_back(new Developer("Alice", 101, 75000, "C++", 450));</pre>
+                    </div>
+                </div>
+                <div class="card">
+                    <h4>➡️ Итератор</h4>
+                    <p>Объект, который указывает на элемент внутри коллекции и позволяет перемещаться по ней. Работает как «умный указатель».</p>
+                    <div class="code-block" style="margin-top: 10px;">
+                        <pre style="margin:0">for (auto it = company.begin(); it != company.end(); ++it) {
+    (*it)->work();
+}</pre>
+                    </div>
+                </div>
+            </div>
+
+            <div class="info-box">
+                <strong>💡 Преимущества использования итераторов:</strong><br>
+                • Скрывают внутреннее устройство коллекции (массив, список, дерево)<br>
+                • Позволяют перебирать элементы единообразно<br>
+                • Дают возможность использовать коллекцию в цикле for с диапазоном (range-based for)<br>
+                • Позволяют использовать стандартные алгоритмы (std::find, std::sort)
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ДИАГРАММА ИЕРАРХИИ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>🏗️ Иерархия классов предметной области</h2>
+            
+            <div class="diagram" style="text-align: center; background: white; padding: 20px; border-radius: 10px;">
+                <svg width="700" height="300" viewBox="0 0 700 300" xmlns="http://www.w3.org/2000/svg">
+                    <defs>
+                        <marker id="arrow" markerWidth="10" markerHeight="7" refX="10" refY="3.5" orient="auto">
+                            <polygon points="0 0, 10 3.5, 0 7" fill="#667eea"/>
+                        </marker>
+                    </defs>
+                    
+                    <rect x="250" y="20" width="200" height="45" rx="8" fill="#667eea" stroke="#5a67d8" stroke-width="2"/>
+                    <text x="350" y="48" text-anchor="middle" fill="white" font-weight="bold">«interface» IWorkable</text>
+                    
+                    <rect x="250" y="100" width="200" height="45" rx="8" fill="#764ba2" stroke="#5a2d8c" stroke-width="2"/>
+                    <text x="350" y="128" text-anchor="middle" fill="white" font-weight="bold">Employee (abstract)</text>
+                    
+                    <line x1="350" y1="65" x2="350" y2="95" stroke="#667eea" stroke-width="2" marker-end="url(#arrow)"/>
+                    <text x="370" y="82" fill="#667eea" font-size="12">extends</text>
+                    
+                    <rect x="50" y="190" width="160" height="45" rx="8" fill="#48bb78" stroke="#38a169" stroke-width="2"/>
+                    <text x="130" y="218" text-anchor="middle" fill="white" font-weight="bold">Developer</text>
+                    
+                    <rect x="270" y="190" width="160" height="45" rx="8" fill="#ed8936" stroke="#dd6b20" stroke-width="2"/>
+                    <text x="350" y="218" text-anchor="middle" fill="white" font-weight="bold">Manager</text>
+                    
+                    <rect x="490" y="190" width="160" height="45" rx="8" fill="#e53e3e" stroke="#c53030" stroke-width="2"/>
+                    <text x="570" y="218" text-anchor="middle" fill="white" font-weight="bold">Tester</text>
+                    
+                    <line x1="280" y1="145" x2="170" y2="185" stroke="#764ba2" stroke-width="2" marker-end="url(#arrow)"/>
+                    <line x1="350" y1="145" x2="350" y2="185" stroke="#764ba2" stroke-width="2" marker-end="url(#arrow)"/>
+                    <line x1="420" y1="145" x2="530" y2="185" stroke="#764ba2" stroke-width="2" marker-end="url(#arrow)"/>
+                    
+                    <text x="230" y="170" fill="#764ba2" font-size="12">extends</text>
+                    <text x="360" y="170" fill="#764ba2" font-size="12">extends</text>
+                    <text x="470" y="170" fill="#764ba2" font-size="12">extends</text>
+                </svg>
+            </div>
+            
+            <div class="info-box">
+                <strong>🔷 MyContainer&lt;T&gt; — шаблонная коллекция:</strong> может хранить объекты любого типа. В нашем случае хранит указатели на Employee (полиморфно).
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- КОД КОЛЛЕКЦИИ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>💻 Реализация MyContainer&lt;T&gt;</h2>
+            
+            <h3>Основные методы</h3>
+            <div class="code-block">
+                <pre style="margin:0">
+<span class="keyword">template</span> &lt;<span class="keyword">typename</span> <span class="type">T</span>&gt;
+<span class="keyword">class</span> <span class="type">MyContainer</span> {
+<span class="keyword">private</span>:
+    T* data;          <span class="comment">// указатель на динамический массив</span>
+    <span class="type">size_t</span> capacity;  <span class="comment">// вместимость</span>
+    <span class="type">size_t</span> count;     <span class="comment">// текущее количество элементов</span>
+
+<span class="keyword">public</span>:
+    <span class="function">MyContainer</span>();                           <span class="comment">// конструктор</span>
+    ~<span class="function">MyContainer</span>();                          <span class="comment">// деструктор</span>
+    
+    <span class="keyword">void</span> <span class="function">push_back</span>(<span class="keyword">const</span> T&amp; value);            <span class="comment">// добавление в конец</span>
+    <span class="keyword">void</span> <span class="function">pop_back</span>();                           <span class="comment">// удаление последнего</span>
+    T&amp; <span class="function">operator[]</span>(<span class="type">size_t</span> index);              <span class="comment">// доступ по индексу</span>
+    <span class="type">size_t</span> <span class="function">size</span>() <span class="keyword">const</span>;                      <span class="comment">// размер</span>
+    <span class="keyword">bool</span> <span class="function">empty</span>() <span class="keyword">const</span>;                       <span class="comment">// проверка на пустоту</span>
+    <span class="keyword">void</span> <span class="function">clear</span>();                               <span class="comment">// очистка</span>
+};</pre>
+            </div>
+
+            <h3>Внутренний итератор (с поддержкой random_access_iterator_tag)</h3>
+            <div class="code-block">
+                <pre style="margin:0">
+<span class="keyword">class</span> <span class="type">Iterator</span> {
+<span class="keyword">public</span>:
+    <span class="comment">// Типы, необходимые для std::iterator_traits</span>
+    <span class="keyword">using</span> iterator_category = std::<span class="function">random_access_iterator_tag</span>;
+    <span class="keyword">using</span> value_type = T;
+    <span class="keyword">using</span> difference_type = std::<span class="type">ptrdiff_t</span>;
+    <span class="keyword">using</span> pointer = T*;
+    <span class="keyword">using</span> reference = T&amp;;
+    
+    <span class="comment">// Операторы, поддерживаемые итератором</span>
+    reference <span class="function">operator*</span>() <span class="keyword">const</span>;
+    Iterator&amp; <span class="function">operator++</span>();      <span class="comment">// префиксный инкремент</span>
+    Iterator <span class="function">operator++</span>(<span class="keyword">int</span>);   <span class="comment">// постфиксный инкремент</span>
+    Iterator&amp; <span class="function">operator--</span>();      <span class="comment">// префиксный декремент</span>
+    <span class="keyword">bool</span> <span class="function">operator==</span>(<span class="keyword">const</span> Iterator&amp; other) <span class="keyword">const</span>;
+    <span class="keyword">bool</span> <span class="function">operator!=</span>(<span class="keyword">const</span> Iterator&amp; other) <span class="keyword">const</span>;
+};</pre>
+            </div>
+
+            <div class="success-box">
+                <strong>✅ Итератор поддерживает все операции категории random_access_iterator_tag:</strong>
+                чтение/запись, движение вперёд/назад, арифметические операции (it + 5, it += 2), сравнение, индексирование (it[3]).
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ИСПОЛЬЗОВАНИЕ std::find И std::sort -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>🔍 Использование std::find и std::sort</h2>
+            
+            <div class="code-block">
+                <pre style="margin:0">
+<span class="comment">// Поиск сотрудника по ID с использованием std::find_if</span>
+<span class="keyword">auto</span> it = std::<span class="function">find_if</span>(container.<span class="function">begin</span>(), container.<span class="function">end</span>(), 
+    [id](Employee* emp) { <span class="keyword">return</span> emp-&gt;<span class="function">getId</span>() == id; });
+
+<span class="comment">// Сортировка сотрудников по зарплате</span>
+std::<span class="function">sort</span>(container.<span class="function">begin</span>(), container.<span class="function">end</span>(), 
+    [](Employee* a, Employee* b) { <span class="keyword">return</span> a-&gt;<span class="function">getSalary</span>() &lt; b-&gt;<span class="function">getSalary</span>(); });
+
+<span class="comment">// Сортировка сотрудников по ID</span>
+std::<span class="function">sort</span>(container.<span class="function">begin</span>(), container.<span class="function">end</span>(), 
+    [](Employee* a, Employee* b) { <span class="keyword">return</span> a-&gt;<span class="function">getId</span>() &lt; b-&gt;<span class="function">getId</span>(); });</pre>
+            </div>
+
+            <div class="info-box">
+                <strong>🌟 Важно:</strong> Стандартные алгоритмы C++ (std::find, std::sort, std::copy) работают не с контейнерами, а с итераторами. 
+                Это позволяет использовать один и тот же алгоритм для любых контейнеров: вектора, списка, массива, собственной коллекции.
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ПРИКЛАДНАЯ ЗАДАЧА -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>🎯 Прикладная задача</h2>
+            
+            <h3>Условие:</h3>
+            <p>В IT-компании работают разработчики, менеджеры и тестировщики. Необходимо:</p>
+            <ol style="margin-left: 20px; margin-top: 10px;">
+                <li>Вывести всех сотрудников с эффективностью выше 85%</li>
+                <li>Отсортировать сотрудников по зарплате и по ID</li>
+                <li>Найти сотрудника по заданному ID</li>
+            </ol>
+
+            <h3>Решение:</h3>
+            <div class="code-block">
+                <pre style="margin:0">
+<span class="comment">// Задача 1: Вывод сотрудников с эффективностью > 85%</span>
+<span class="keyword">void</span> <span class="function">demonstrateHighEfficiencyEmployees</span>(<span class="keyword">const</span> MyContainer&lt;Employee*&gt;&amp; container) {
+    std::cout &lt;&lt; <span class="string">"\n=== High Efficiency Employees (Efficiency > 85%) ==="</span> &lt;&lt; std::endl;
+    
+    <span class="keyword">for</span> (<span class="keyword">auto</span> it = container.<span class="function">begin</span>(); it != container.<span class="function">end</span>(); ++it) {
+        <span class="type">double</span> efficiency = (*it)-&gt;<span class="function">getEfficiency</span>();
+        <span class="keyword">if</span> (efficiency &gt; 0.85) {
+            (*it)-&gt;<span class="function">displayInfo</span>();
+            std::cout &lt;&lt; <span class="string">" - Efficiency: "</span> &lt;&lt; (efficiency * 100) &lt;&lt; <span class="string">"%"</span> &lt;&lt; std::endl;
+        }
+    }
+}
+
+<span class="comment">// Задача 2: Сортировка</span>
+std::<span class="function">sort</span>(container.<span class="function">begin</span>(), container.<span class="function">end</span>(), compareBySalary);
+std::<span class="function">sort</span>(container.<span class="function">begin</span>(), container.<span class="function">end</span>(), compareById);
+
+<span class="comment">// Задача 3: Поиск по ID</span>
+<span class="keyword">auto</span> it = std::<span class="function">find_if</span>(container.<span class="function">begin</span>(), container.<span class="function">end</span>(), 
+    [id](Employee* emp) { <span class="keyword">return</span> emp-&gt;<span class="function">getId</span>() == id; });</pre>
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ДЕМОНСТРАЦИЯ РАБОТЫ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>▶️ Демонстрация работы программы</h2>
+            
+            <div class="output-title">=== MyContainer Demo ===</div>
+            <div class="output">
+Container size: 6
+Container capacity: 8
+
+=== All Employees ===
+Developer: Alice (ID: 101, Salary: $75000, Language: C++, LOC/day: 450)
+Manager: Bob (ID: 102, Salary: $90000, Team size: 8, Meetings/day: 5)
+Tester: Charlie (ID: 103, Salary: $65000, Bugs/day: 25, Tool: Selenium)
+Developer: Diana (ID: 104, Salary: $80000, Language: Python, LOC/day: 600)
+Manager: Eve (ID: 105, Salary: $95000, Team size: 12, Meetings/day: 7)
+Tester: Frank (ID: 106, Salary: $70000, Bugs/day: 30, Tool: Cypress)
+            </div>
+
+            <div class="output-title">=== Поиск сотрудника по ID ===</div>
+            <div class="output">
+Found employee with ID 103: Tester: Charlie (ID: 103, Salary: $65000, Bugs/day: 25, Tool: Selenium)
+
+Employee with ID 999 not found
+            </div>
+
+            <div class="output-title">=== Сортировка по зарплате ===</div>
+            <div class="output">
+Tester: Charlie (ID: 103, Salary: $65000) - Salary: $65000
+Tester: Frank (ID: 106, Salary: $70000) - Salary: $70000
+Developer: Alice (ID: 101, Salary: $75000) - Salary: $75000
+Developer: Diana (ID: 104, Salary: $80000) - Salary: $80000
+Manager: Bob (ID: 102, Salary: $90000) - Salary: $90000
+Manager: Eve (ID: 105, Salary: $95000) - Salary: $95000
+            </div>
+
+            <div class="output-title">=== Сортировка по ID ===</div>
+            <div class="output">
+Developer: Alice (ID: 101, Salary: $75000) - Salary: $75000
+Manager: Bob (ID: 102, Salary: $90000) - Salary: $90000
+Tester: Charlie (ID: 103, Salary: $65000) - Salary: $65000
+Developer: Diana (ID: 104, Salary: $80000) - Salary: $80000
+Manager: Eve (ID: 105, Salary: $95000) - Salary: $95000
+Tester: Frank (ID: 106, Salary: $70000) - Salary: $70000
+            </div>
+
+            <div class="output-title">=== Сотрудники с эффективностью > 85% ===</div>
+            <div class="output">
+Developer: Diana (ID: 104, Salary: $80000, Language: Python, LOC/day: 600) - Efficiency: 100%
+Tester: Charlie (ID: 103, Salary: $65000, Bugs/day: 25, Tool: Selenium) - Efficiency: 100%
+Tester: Frank (ID: 106, Salary: $70000, Bugs/day: 30, Tool: Cypress) - Efficiency: 100%
+            </div>
+
+            <div class="output-title">=== Range-based for loop (C++11) ===</div>
+            <div class="output">
+Developer Alice writes 450 lines of C++ code
+Manager Bob conducts 5 meetings and manages a team of 8 people
+Tester Charlie finds 25 bugs using Selenium
+Developer Diana writes 600 lines of Python code
+Manager Eve conducts 7 meetings and manages a team of 12 people
+Tester Frank finds 30 bugs using Cypress
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ТАБЛИЦА МЕТОДОВ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📊 API класса MyContainer&lt;T&gt;</h2>
+            
+            <table>
+                <thead>
+                    <tr>
+                        <th>Метод</th>
+                        <th>Описание</th>
+                        <th>Сложность</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>MyContainer()</code></td>
+                        <td>Конструктор по умолчанию</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><code>~MyContainer()</code></td>
+                        <td>Деструктор (освобождает память)</td>
+                        <td>O(n)</td>
+                    </tr>
+                    <tr>
+                        <td><code>push_back(const T&)</code></td>
+                        <td>Добавляет элемент в конец</td>
+                        <td>O(1) амортизированно</td>
+                    </tr>
+                    <tr>
+                        <td><code>pop_back()</code></td>
+                        <td>Удаляет последний элемент</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><code>operator[](size_t)</code></td>
+                        <td>Доступ по индексу</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><code>size()</code></td>
+                        <td>Возвращает количество элементов</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><code>empty()</code></td>
+                        <td>Проверка на пустоту</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><code>clear()</code></td>
+                        <td>Очищает коллекцию</td>
+                        <td>O(1)</td>
+                    </tr>
+                    <tr>
+                        <td><code>begin() / end()</code></td>
+                        <td>Возвращают итераторы</td>
+                        <td>O(1)</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- СБОРКА И ЗАПУСК -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>🔧 Сборка и запуск</h2>
+            
+            <div class="code-block">
+                <pre style="margin:0">
+<span class="comment"># Переход в директорию проекта</span>
+cd sem5_PCS
+
+<span class="comment"># Очистка предыдущей сборки</span>
+rm -rf build
+
+<span class="comment"># Создание директории сборки</span>
+mkdir build && cd build
+
+<span class="comment"># Генерация файлов сборки</span>
+cmake ..
+
+<span class="comment"># Компиляция</span>
+make
+
+<span class="comment"># Запуск программы</span>
+./it_company_collection</pre>
+            </div>
+
+            <div class="success-box">
+                <strong>📋 Требования:</strong> CMake 3.10+, компилятор с поддержкой C++17 (GCC, Clang, MSVC)
+            </div>
+        </div>
+
+        <!-- ============================================ -->
+        <!-- ВЫВОДЫ -->
+        <!-- ============================================ -->
+        <div class="section">
+            <h2>📝 Ключевые выводы</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>✅ Что реализовано</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Шаблонный класс MyContainer&lt;T&gt;</li>
+                        <li>Внутренний итератор с полной поддержкой random_access_iterator_tag</li>
+                        <li>Методы push_back, pop_back, доступ по индексу</li>
+                        <li>Использование std::find_if для поиска</li>
+                        <li>Использование std::sort для сортировки</li>
+                        <li>Range-based for loop (C++11)</li>
+                    </ul>
+                </div>
+                <div class="card">
+                    <h4>🎓 Что дают коллекции и итераторы</h4>
+                    <ul style="margin-left: 20px;">
+                        <li>Единообразный способ хранения объектов</li>
+                        <li>Универсальный доступ к элементам</li>
+                        <li>Возможность использовать стандартные алгоритмы</li>
+                        <li>Сокрытие внутренней структуры данных</li>
+                        <li>Автоматическое управление памятью</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="info-box" style="margin-top: 20px;">
+                <strong>💡 Итератор — это «умный указатель»:</strong> он скрывает внутреннее устройство коллекции и позволяет 
+                перебирать элементы единообразно, независимо от того, хранятся ли данные в массиве, списке или дереве.
+            </div>
+
+            <div class="warning-box">
+                <strong>📖 Важно для защиты:</strong> Студент должен уметь объяснить:<br>
+                • Зачем нужны итераторы и какие категории существуют<br>
+                • Как работают std::find и std::sort с пользовательскими коллекциями<br>
+                • Что такое шаблоны классов и зачем они нужны<br>
+                • Как устроен итератор random_access_iterator_tag<br>
+                • В чём разница между begin()/end() и cbegin()/cend()
+            </div>
+        </div>
+    </div>
+
+    <div class="footer">
+        <p>Семинар 5: Создание коллекции. Шаблоны классов и итераторы | IT-Company | C++17 | CMake</p>
+        <p>MyContainer&lt;T&gt; | Iterator | std::find | std::sort | Range-based for loop</p>
+    </div>
+</div>
+</body>
+</html>
